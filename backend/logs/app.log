@@ -1,0 +1,4 @@
+172.18.0.1 - - [17/Feb/2026:19:03:49 +0000] "GET /api/tickets HTTP/1.1" 200 55 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
+172.18.0.1 - - [17/Feb/2026:19:03:56 +0000] "GET /api/tickets HTTP/1.1" 200 55 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
+172.18.0.1 - - [17/Feb/2026:19:03:59 +0000] "GET /api/ticket%D1%8B HTTP/1.1" 404 32 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
+172.18.0.1 - - [17/Feb/2026:19:04:02 +0000] "GET /api/tickets HTTP/1.1" 200 55 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
