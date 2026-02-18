@@ -3,11 +3,20 @@
 header('Content-Type: application/json');
 
 // Получаем путь запроса
-$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$uri = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+$method = $_SERVER['REQUEST_METHOD'];
+$segments = explode('/', $uri);
+
+if ($segments[0] !== 'api') {
+    http_response_code(404, "Invalid endpoint");
+}
+
+$resource = $segments[1] ?? null;
+$id = $segments[2] ?? null;
 
 // Простейший роутер
-switch ($uri) {
-    case '/api/tickets':
+switch ($resource) {
+    case 'tickets':
         require __DIR__ . '/api/tickets.php';
         break;
 
