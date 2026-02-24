@@ -24,3 +24,10 @@ switch ($resource) {
         http_response_code(404);
         echo json_encode(['error' => 'Not Found']);
 }
+
+function respond($code, $data)
+{
+    http_response_code($code);
+    echo json_encode($data);
+    exit;
+}

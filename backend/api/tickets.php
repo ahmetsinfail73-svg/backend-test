@@ -5,12 +5,65 @@ require __DIR__ . '/../config/database.php';
 switch ($method) {
     case 'GET':
         $limit = 20;
+        $offset = isset($_GET['offset']) ? (int)$_GET['offset'] : 0;
+        $status = $_GET['status']   ?? null;
+        $priority = $_GET['priority'] ?? null;
+        $search = trim($_GET['search'] ?? "");
+        $created_at = $_GET['created_at'] ?? null;
+        $updated_at = $_GET['updated_at'] ?? null;
+        $id = $_GET['id'] ?? null;
+
+        $offset = max(0, $offset);
 
 
-        $stmt = db()->prepare("SELECT id, title, priority, status FROM tickets LIMIT = ?");
-        $stmt->bind_param('i', $id);
+        $sql = "SELECT id, title, priority, status FROM tickets";
+        $where = [];
+        $params = [];
+        $types = '';
+        if ($id) {
+            $where[] = "id = ?";
+            $params[] = $id;
+            $types .= 'i';
+        }
+        if ($search != "") {
+            $where[] = "title LIKE ?";
+            $params[] = "%$search%";
+            $types .= 's';
+        }
+        if ($status) {
+            $where[] = "status = ?";
+            $params[] = $status;
+            $types .= 's';
+        }
+        if ($priority) {
+            $where[] = "priority = ?";
+            $params[] = $priority;
+            $types .= 's';
+        }
+        if ($created_at) {
+            $where[] = "created_at >= ?";
+            $params[] = $created_at;
+            $types .= 's';
+        }
+        if ($updated_at) {
+            $where[] = "updated_at >= ?";
+            $params[] = $updated_at;
+            $types .= 's';
+        }
+
+
+        if (!empty($where)) {
+            $sql .= " WHERE " . implode(" AND ", $where);
+        }
+        $sql .= " LIMIT ? OFFSET ?";
+        $params[] = $limit;
+        $params[] = $offset;
+        $types .= 'ii';
+
+        $stmt = db()->prepare($sql);
+        $stmt->bind_param($types, ...$params);
         $stmt->execute();
-
+        
         $result = $stmt->get_result();
         if ($result->num_rows === 0) {
             respond(200, "Not Found");
@@ -21,4 +74,35 @@ switch ($method) {
             $tickets[] = $row;
         }
         respond(200, $tickets);
+        break;
+    case 'POST':
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        $title = trim($data['title'] ?? "");
+        $description = trim($data['description'] ?? "");
+        $priority = $data['priority'] ?? "medium";
+        $status = $data['status'] ?? "open";
+        if ($title == "") {
+            respond(400, "Title is required");
+        }
+
+
+        $allowed_priorities = ['low', 'medium', 'high'];
+        if (!in_array($priority, $allowed_priorities)) {
+            respond(400, "Invalid priority");
+        }
+
+        $allowed_statuses = ['open', 'in_progress', 'closed'];
+        if (!in_array($status, $allowed_statuses)) {
+            respond(400, "Invalid status");
+        }
+
+        $stmt = db()->prepare("INSERT INTO tickets (title, description, priority, status) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssss", $title, $description, $priority, $status);
+        if ($stmt->execute()) {
+            respond(201, ['id' => $stmt->insert_id]);
+        } else {
+            respond(500, "Database error: " . $stmt->error);
+        }
+        break;
 }
