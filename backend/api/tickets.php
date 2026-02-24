@@ -105,4 +105,61 @@ switch ($method) {
             respond(500, "Database error: " . $stmt->error);
         }
         break;
+    case "PUT":
+         $data = json_decode(file_get_contents('php://input'), true);
+
+         $id = $data['id'] ?? null;
+         if (!$id) {
+             respond(400, "ID is required");
+         }
+         $fields = [];
+        $params = [];
+
+        if (array_key_exists('title', $data)) {
+            $fields[] = "title = ?";
+            $params[] = trim($data['title']);
+        }
+
+        if (array_key_exists('description', $data)) {
+            $fields[] = "description = ?";
+            $params[] = trim($data['description']);
+        }
+
+        if (array_key_exists('priority', $data)) {
+            $priority = $data['priority'];
+            $allowed_priorities = ['low', 'medium', 'high'];
+            if (!in_array($priority, $allowed_priorities)) {
+                respond(400, "Invalid priority");
+            }
+            $fields[] = "priority = ?";
+            $params[] = $priority;
+        }
+
+        if (array_key_exists('status', $data)) {
+            $status = $data['status'];
+            $allowed_statuses = ['open', 'in_progress', 'closed'];
+            if (!in_array($status, $allowed_statuses)) {
+                respond(400, "Invalid status");
+            }
+            $fields[] = "status = ?";
+            $params[] = $status;
+        }
+
+        if (empty($fields)) {
+            respond(400, "No fields to update");
+        }
+
+        $params[] = $id;
+
+        $sql = "UPDATE tickets SET " . implode(", ", $fields) . " WHERE id = ?";
+
+        $result = db()->execute_query($sql, $params);
+
+        if ($result === false) {
+            respond(404, "Not Found");
+        }
+        
+        respond(200, "Updated");
+        break;
+
 }
