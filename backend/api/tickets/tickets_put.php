@@ -1,33 +1,33 @@
- <?php
+<?php
 
 
-require __DIR__ . '/../config/database.php';
- 
- 
- 
- $data = json_decode(file_get_contents('php://input'), true);
+require __DIR__ . '/../../config/database.php';
 
-         $id = $data['id'] ?? null;
-         if (!$id) {
-             respond(400, "ID is required");
-         }
-        $dto = new UpdateTicketDto($data);
-        $errors = $dto->validate();
 
-        if (!empty($errors)) {
-            respond(400, $errors);
-        }
 
-        list($fields, $params) = $dto->toSqlSet();
-        $params[] = $id;
+$data = json_decode(file_get_contents('php://input'), true);
 
-        $sql = "UPDATE tickets SET " . implode(", ", $fields) . " WHERE id = ?";
+$id = $data['id'] ?? null;
+if (!$id) {
+    respond(400, "ID is required");
+}
+$dto = new UpdateTicketDto($data);
+$errors = $dto->validate();
 
-        $result = db()->execute_query($sql, $params);
+if (!empty($errors)) {
+    respond(400, $errors);
+}
 
-        if ($result === false) {
-            respond(404, "Not Found");
-        }
-        
-        respond(200, "Updated");
-        break;
+list($fields, $params) = $dto->toSqlSet();
+$params[] = $id;
+
+$sql = "UPDATE tickets SET " . implode(", ", $fields) . " WHERE id = ?";
+
+$result = db()->execute_query($sql, $params);
+
+if ($result === false) {
+    respond(404, "Not Found");
+}
+
+respond(200, "Updated");
+
