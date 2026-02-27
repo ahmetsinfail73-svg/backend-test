@@ -3,6 +3,7 @@
 header('Content-Type: application/json');
 
 
+
 enum PriorityEnum: string {
     case LOW = 'low';
     case MEDIUM = 'medium';
@@ -144,7 +145,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 $segments = explode('/', $uri);
 
 if ($segments[0] !== 'api') {
-    http_response_code(404, "Invalid endpoint");
+    respond(404, 'Resource not found');
 }
 
 $resource = $segments[1] ?? null;
@@ -153,18 +154,40 @@ $sub  = $segments[3] ?? null;
 
 
 if ($resource === 'tickets' && $sub === 'attachments') {
-    require __DIR__ . '/api/attachments.php';
-    exit;
+    switch ($method) {
+        case 'POST':
+            require __DIR__ . '/api/attachments/attachments_post.php';
+            break;
+        case 'GET':
+            require __DIR__ . '/api/attachments/attachments_get.php';
+            break;
+        default:
+            respond(405, 'Method not allowed');
+    }
 }
 
 switch ($resource) {
     case 'tickets':
-        require __DIR__ . '/api/tickets.php';
+        switch ($method) {
+            case 'GET':
+                require __DIR__ . '/api/tickets/tickets_get.php';
+                break;
+            case 'POST':
+                require __DIR__ . '/api/tickets/tickets_post.php';
+                break;
+            case 'PUT':
+                require __DIR__ . '/api/tickets/tickets_put.php';
+                break;
+            case 'DELETE':
+                require __DIR__ . '/api/tickets/tickets_delete.php';
+                break;
+            default:
+                respond(405, 'Method not allowed');
+        }
         break;
 
     default:
-        http_response_code(404);
-        echo json_encode(['error' => 'Not Found']);
+        respond(404, 'Resource not found');
 }
 
 function respond($code, $data)

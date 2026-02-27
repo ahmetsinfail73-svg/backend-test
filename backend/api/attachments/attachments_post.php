@@ -3,18 +3,11 @@
 require __DIR__ . '/../config/database.php';
 
 
-if ($method !== 'POST') {
-    http_response_code(405);
-    echo json_encode(['error' => 'Method not allowed']);
-    exit;
-}
-
 $uri   = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $parts = explode('/', trim($uri, '/'));
 
 if (!isset($parts[1], $parts[2], $parts[3]) || $parts[1] !== 'tickets' || $parts[3] !== 'attachments') {
-    http_response_code(404);
-    echo json_encode(['error' => 'Not Found']);
+    respond(404, 'Not Found');
     exit;
 }
 
