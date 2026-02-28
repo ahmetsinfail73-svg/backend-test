@@ -213,3 +213,8 @@
 172.18.0.1 - - [27/Feb/2026:20:35:44 +0000] "GET /api/tickets.php HTTP/1.1" 404 31 "-" "PostmanRuntime/7.51.1"
 172.18.0.1 - - [27/Feb/2026:20:35:47 +0000] "GET /api/tickets HTTP/1.1" 200 633 "-" "PostmanRuntime/7.51.1"
 172.18.0.1 - - [27/Feb/2026:20:35:56 +0000] "GET /api/tickets?sort=oldest HTTP/1.1" 200 633 "-" "PostmanRuntime/7.51.1"
+172.27.0.1 - - [28/Feb/2026:12:18:54 +0000] "GET / HTTP/1.1" 200 5256 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
+172.27.0.1 - - [28/Feb/2026:12:19:05 +0000] "GET / HTTP/1.1" 304 0 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
+172.27.0.1 - - [28/Feb/2026:12:19:07 +0000] "GET /api/tickets/get HTTP/1.1" 200 12644 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
+172.27.0.1 - - [28/Feb/2026:12:19:08 +0000] "GET /api/tickets/ HTTP/1.1" 200 12644 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
+172.27.0.1 - - [28/Feb/2026:12:19:08 +0000] "GET /favicon.ico HTTP/1.1" 404 188 "http://localhost:8080/api/tickets/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"

@@ -3,21 +3,16 @@
 require __DIR__ . '/../../config/database.php';
 
 $limit = 20;
-$priority = $_GET['priority'] ?? null;
 $search = trim($_GET['search'] ?? "");
 $page = $_GET['page'] ?? 1;
 
 $offset = ($page - 1) * $limit;
 
 $sql = "SELECT * FROM tickets";
-$where = [];
-$params = [];
-$types = '';
 $filters = [
     'status' => $_GET['status'] ?? null,
     'priority' => $_GET['priority'] ?? null,
     'title' => $_GET['search'] ?? null,
-    "id" => $_GET['id'] ?? null
 ];
 
 $where = [];
@@ -25,7 +20,7 @@ $params = [];
 $types = '';
 
 foreach ($filters as $field => $value) {
-    if ($value !== null && $value !== '') {
+    if ($value !== null && $value !== '' && $value !== 'all') {
         if ($field === 'title') {
             $where[] = "(title LIKE ? OR description LIKE ?)";
             $params[] = "%$value%";
@@ -68,9 +63,6 @@ if (!empty($params)) {
 $stmt->execute();
 
 $result = $stmt->get_result();
-if ($result->num_rows === 0) {
-    respond(200, "Not Found");
-}
 
 $tickets = [];
 while ($row = $result->fetch_assoc()) {

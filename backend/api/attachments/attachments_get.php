@@ -10,7 +10,7 @@ $stmt->bind_param('i', $ticketId);
 $stmt->execute();
 $stmt->store_result();
 if ($stmt->num_rows === 0) {
-    respond(404, 'Ticket not found');
+    respond(404, 'Тикет не найден');
 }
 
 
